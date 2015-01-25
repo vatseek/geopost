@@ -1,5 +1,11 @@
-#map {
+#map_edit {
     height: 300px;
+    width: 100%;
+    overflow: hidden;
+}
+
+#map {
+    height: 600px;
     width: 100%;
     overflow: hidden;
 }

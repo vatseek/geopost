@@ -20,7 +20,7 @@ class PluginGeopost_ActionMap extends ActionPlugin
 
     protected function EventMap()
     {
-        die('123');
+        $this->Viewer_Assign('noSidebar', true);
         $this->SetTemplateAction('map');
     }
 }

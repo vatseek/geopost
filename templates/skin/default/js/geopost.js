@@ -1,13 +1,10 @@
 $(document).ready(function () {
-    var mapContainer = $('#map');
+    var mapContainer = $('#map_edit');
     if (!mapContainer.length) {
         return false;
     }
 
     var location = getViewData();
-
-    console.log(location);
-
     var lat = location[0];
     var long = location[1];
     var defaultPos = false;
@@ -19,23 +16,15 @@ $(document).ready(function () {
     }
 
     var marksLayer = L.layerGroup();
-    var map = L.map('map', { layers: [marksLayer]}).setView([lat, long], 7);
+    var map = L.map('map_edit', { layers: [marksLayer]}).setView([lat, long], 7);
 
-    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a>'
+    L.tileLayer(tileProvider, {
+        attribution: mapCopyright
     }).addTo(map);
 
     if (defaultPos) {
         map.locate({setView: true, watch: true});
     }
-
-    //map.on('dragend', function(e) {
-    //
-    //});
-    //
-    //map.on('zoomend', function(e) {
-    //
-    //});
 
     var marker = false;
     if (!defaultPos) {
@@ -78,3 +67,38 @@ $(document).ready(function () {
         ];
     }
 });
+
+
+$(document).ready(function () {
+    var mapContainer = $('#map');
+    if (!mapContainer.length) {
+        return false;
+    }
+
+    var marksLayer = L.layerGroup();
+    var map = L.map('map', { layers: [marksLayer]}).setView([0, 0], 7);
+
+    L.tileLayer(tileProvider, {
+        attribution: mapCopyright
+    }).addTo(map);
+
+    map.locate({setView: true, watch: true});
+
+    map.on('dragend', function(e) {
+
+    }).on('zoomend', function(e) {
+
+    }).on('locationfound', function () {
+        //var location = map.getBounds().getCenter();
+    }).on('locationerror', function () {
+
+    });
+
+    function setMarker(positionLanLong) {
+        marker = L.marker(positionLanLong, {
+            draggable : true,
+            clickable : true
+        }).addTo(marksLayer);
+    }
+});
+
