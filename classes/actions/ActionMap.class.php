@@ -1,24 +1,26 @@
 <?php
 
-class PluginMap_ActionPage extends ActionPlugin
+class PluginGeopost_ActionMap extends ActionPlugin
 {
-    protected $sUserLogin = null;
+    protected $oUserCurrent = null;
+    protected $sMenuHeadItemSelect = 'map';
+    protected $sMenuItemSelect = 'map';
+    protected $sMenuSubItemSelect = 'map';
 
     public function Init()
     {
+
     }
 
-    /**
-     * Регистрируем евенты
-     *
-     */
     protected function RegisterEvent()
     {
-        $this->AddEvent('map', 'EventMap');
+        $this->AddEvent('index', 'EventMap');
+        $this->SetDefaultEvent('index');
     }
 
-    protected function EvenMap()
+    protected function EventMap()
     {
-
+        die('123');
+        $this->SetTemplateAction('map');
     }
 }

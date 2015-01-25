@@ -5,6 +5,6 @@ $config = array(
     'map_copyright' => 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 );
 
-Config::Set('router.geopost.map', 'PluginGeopost_ActionMap');
+Config::Set('router.page.map', 'PluginGeopost_ActionMap');
 
 return $config;

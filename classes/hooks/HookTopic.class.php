@@ -12,6 +12,12 @@ class PluginGeopost_HookTopic extends Hook
         $this->AddHook('topic_add_after', 'TopicSubmitAfter', __CLASS__);
         $this->AddHook('topic_edit_after', 'TopicSubmitAfter', __CLASS__);
 
+        $this->AddHook('template_main_menu_item', 'TemplateMainMenuItem', __CLASS__);
+    }
+
+    public function TemplateMainMenuItem()
+    {
+        return $this->Viewer_Fetch(Plugin::GetTemplatePath('geopost') . 'main_menu_item.tpl');
     }
 
     public function TemplateFormAddTopicBegin()
