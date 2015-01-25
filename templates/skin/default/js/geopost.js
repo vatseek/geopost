@@ -85,7 +85,9 @@ $(document).ready(function () {
     map.locate({setView: true, watch: true});
 
     map.on('dragend', function(e) {
-
+        var pointLT = map.getBounds().getNorthWest();
+        var pointRB = map.getBounds().getSouthEast();
+        getMarks(pointLT.lat, pointLT.lng, pointRB.lat, pointRB.lng);
     }).on('zoomend', function(e) {
 
     }).on('locationfound', function () {
@@ -93,6 +95,16 @@ $(document).ready(function () {
     }).on('locationerror', function () {
 
     });
+
+    function getMarks(x1,y1,x2,y2) {
+        $.ajax({
+            url: aRouter.ajax +"map",
+            method: 'post',
+            data: {x1: x1, y1: y1, x2: x2, y2: y2, security_ls_key: LIVESTREET_SECURITY_KEY}
+        }).success(function(result) {
+            console.log(result);
+        });
+    }
 
     function setMarker(positionLanLong) {
         marker = L.marker(positionLanLong, {
