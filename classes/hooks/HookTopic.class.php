@@ -34,6 +34,15 @@ class PluginGeopost_HookTopic extends Hook
 
     public function TopicSubmitAfter($data)
     {
-        $oTopic = $data['oTopic'];
+        $lat = (float) getRequest('lat', 0);
+        $long = (float) getRequest('long', 0);
+
+        if ($lat && $long) {
+            $oTopic = $data['oTopic'];
+            $oTopic->setLat($lat);
+            $oTopic->setLong($long);
+
+            $this->Topic_UpdateGeoData($oTopic);
+        }
     }
 }

@@ -5,6 +5,9 @@ $(document).ready(function () {
     }
 
     var location = getViewData();
+
+    console.log(location);
+
     var lat = location[0];
     var long = location[1];
     var defaultPos = false;
@@ -70,8 +73,8 @@ $(document).ready(function () {
 
     function getViewData() {
         return [
-            $('#map_form_container input[name="lat"]').val(),
-            $('#map_form_container input[name="long"]').val()
+            parseFloat($('#map_form_container input[name="lat"]').val().replace(',','.')),
+            parseFloat($('#map_form_container input[name="long"]').val().replace(',','.'))
         ];
     }
 });
