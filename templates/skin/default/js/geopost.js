@@ -1,3 +1,14 @@
+String.prototype.hashCode = function(){
+    var hash = 0;
+    if (this.length == 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        char = this.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash;
+}
+
 $(document).ready(function () {
     var mapContainer = $('#map_edit');
     if (!mapContainer.length) {
@@ -70,18 +81,18 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
+    var cache = {};
     var mapContainer = $('#map');
     if (!mapContainer.length) {
         return false;
     }
 
     var marksLayer = L.layerGroup();
-    var map = L.map('map', { layers: [marksLayer]}).setView([0, 0], 7);
+    var map = L.map('map', { layers: [marksLayer], zoom: 10}).setView([0, 0], 7);
 
     L.tileLayer(tileProvider, {
         attribution: mapCopyright
     }).addTo(map);
-
     map.locate({setView: true, watch: true});
 
     map.on('dragend', function(e) {
@@ -89,11 +100,9 @@ $(document).ready(function () {
         var pointRB = map.getBounds().getSouthEast();
         getMarks(pointLT.lat, pointLT.lng, pointRB.lat, pointRB.lng);
     }).on('zoomend', function(e) {
-
-    }).on('locationfound', function () {
-        //var location = map.getBounds().getCenter();
-    }).on('locationerror', function () {
-
+        var pointLT = map.getBounds().getNorthWest();
+        var pointRB = map.getBounds().getSouthEast();
+        getMarks(pointLT.lat, pointLT.lng, pointRB.lat, pointRB.lng);
     });
 
     function getMarks(x1,y1,x2,y2) {
@@ -102,15 +111,34 @@ $(document).ready(function () {
             method: 'post',
             data: {x1: x1, y1: y1, x2: x2, y2: y2, security_ls_key: LIVESTREET_SECURITY_KEY}
         }).success(function(result) {
-            console.log(result);
+            if (result.data) {
+                //marksLayer.res
+                for (var i = 0; i < result.data.length; i++) {
+                    setMarker(result.data[i]);
+                }
+            }
         });
     }
 
-    function setMarker(positionLanLong) {
-        marker = L.marker(positionLanLong, {
-            draggable : true,
+    function setMarker(data) {
+        if (cache[data.t_id] != undefined) {
+            return;
+        }
+        cache[data.t_id] = true;
+        var name = data.name;
+        var size = 20;
+        if (name.length > size) {
+            name = data.name.substr(0, size) + '...'
+        }
+
+        marker = L.marker(data.gps, {
+            draggable : false,
             clickable : true
-        }).addTo(marksLayer);
+        }).addTo(
+            marksLayer
+        ).bindPopup(
+            '<a href="' + data.url + '">' + name + '</a>'
+        );
     }
 });
 

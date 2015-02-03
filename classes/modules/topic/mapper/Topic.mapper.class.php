@@ -14,6 +14,33 @@ class PluginGeopost_ModuleTopic_MapperTopic extends PluginTreeblogs_Inherit_Modu
         return true;
     }
 
+    public function getTopicsIdByBounds($iTopLeftX, $iTopLeftY, $iBotRightX, $iBotRightY)
+    {
+        $x1 = min($iTopLeftX, $iBotRightX);
+        $x2 = max($iTopLeftX, $iBotRightX);
+        $y1 = min($iTopLeftY, $iBotRightY);
+        $y2 = max($iTopLeftY, $iBotRightY);
+
+        $sql = "SELECT
+                  _t.topic_id
+                FROM " . Config::Get('db.table.topic') . " AS _t
+                WHERE
+                    _t.lat >= ?f
+                    AND _t.lat <= ?f
+                    AND _t.long >= ?f
+                    AND _t.long <= ?f
+                    AND _t.topic_publish = 1 ";
+
+        $aTopicsId = array();
+        if ($aRows = $this->oDb->select($sql, $x1, $x2, $y1, $y2)) {
+            foreach ($aRows as $aTopic) {
+                $aTopicsId[] = $aTopic['topic_id'];
+            }
+        }
+
+        return $aTopicsId;
+    }
+
     public function getTopicsByBounds($iTopLeftX, $iTopLeftY, $iBotRightX, $iBotRightY)
     {
         $x1 = min($iTopLeftX, $iBotRightX);

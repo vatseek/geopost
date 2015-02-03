@@ -24,12 +24,23 @@ class PluginGeopost_ActionAjax extends PluginTreeblogs_Inherit_ActionAjax
             ));
         }
 
-        $aTopic = $this->Topic_getTopicsByBounds($iTopLeftX, $iTopLeftY, $iBotRightX, $iBotRightY);
+        $aTopicId = $this->Topic_getTopicsIdByBounds($iTopLeftX, $iTopLeftY, $iBotRightX, $iBotRightY);
+        $aTopic = $this->Topic_GetTopicsAdditionalData($aTopicId, array('blog' => array('owner' => array()), 'vote'));
+        $aTopicData = array();
+        /** @var ModuleTopic_EntityTopic $oTopic */
         foreach ($aTopic as $oTopic) {
-            //TODO: create valid json
+            $aTopicData[] = array(
+                't_id' => $oTopic->getId(),
+                'gps' => array(
+                    round($oTopic->getLat(), 8), round($oTopic->getLong(), 8)
+                ),
+                'url' => $oTopic->getUrl(),
+                'name' => $oTopic->getTitle(),
+            );
         }
 
-        $this->Viewer_SetResponseAjax();
+        $this->Viewer_SetResponseAjax('json');
+        $this->Viewer_AssignAjax('data', $aTopicData);
     }
 
 }
