@@ -56,8 +56,10 @@ class PluginGeopost extends Plugin
         $this->Viewer_Assign('sGeoPostPluginPath', Plugin::GetTemplatePath(__CLASS__));
 
         $this->Viewer_AppendScript('http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js');
+        $this->Viewer_AppendScript(Plugin::GetTemplateWebPath(__CLASS__) . 'js/leaflet.markercluster.js');
         $this->Viewer_AppendScript(Plugin::GetTemplateWebPath(__CLASS__) . 'js/geopost.js');
         $this->Viewer_AppendStyle('http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css');
         $this->Viewer_AppendStyle(Plugin::GetTemplateWebPath(__CLASS__) . 'css/geopost.css');
+        $this->Viewer_AppendStyle(Plugin::GetTemplateWebPath(__CLASS__) . 'css/cluster.css');
     }
 }

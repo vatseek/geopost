@@ -105,6 +105,9 @@ $(document).ready(function () {
         getMarks(pointLT.lat, pointLT.lng, pointRB.lat, pointRB.lng);
     });
 
+    var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
+    map.addLayer(markers);
+
     function getMarks(x1,y1,x2,y2) {
         $.ajax({
             url: aRouter.ajax +"map",
@@ -131,14 +134,14 @@ $(document).ready(function () {
             name = data.name.substr(0, size) + '...'
         }
 
-        marker = L.marker(data.gps, {
+        var marker = L.marker(data.gps, {
             draggable : false,
             clickable : true
-        }).addTo(
-            marksLayer
-        ).bindPopup(
+        }).bindPopup(
             '<a href="' + data.url + '">' + name + '</a>'
         );
+
+        markers.addLayer(marker);
     }
 });
 
