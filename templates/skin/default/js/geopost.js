@@ -34,7 +34,7 @@ $(document).ready(function () {
     }).addTo(map);
 
     if (defaultPos) {
-        map.locate({setView: true, watch: true});
+        map.locate({setView: true, watch: false});
     }
 
     var marker = false;
@@ -93,7 +93,7 @@ $(document).ready(function () {
     L.tileLayer(tileProvider, {
         attribution: mapCopyright
     }).addTo(map);
-    map.locate({setView: true, watch: true});
+    map.locate({setView: true, watch: false});
 
     map.on('dragend', function(e) {
         var pointLT = map.getBounds().getNorthWest();
