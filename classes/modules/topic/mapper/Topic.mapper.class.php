@@ -26,9 +26,9 @@ class PluginGeopost_ModuleTopic_MapperTopic extends PluginTreeblogs_Inherit_Modu
                 FROM " . Config::Get('db.table.topic') . " AS _t
                 WHERE
                     _t.lat >= ?f
-                    AND _t.lat <= ?f
+                    AND _t.lat < ?f
                     AND _t.long >= ?f
-                    AND _t.long <= ?f
+                    AND _t.long < ?f
                     AND _t.topic_publish = 1 ";
 
         $aTopicsId = array();
@@ -39,6 +39,55 @@ class PluginGeopost_ModuleTopic_MapperTopic extends PluginTreeblogs_Inherit_Modu
         }
 
         return $aTopicsId;
+    }
+
+    /**
+     * @param $aZones
+     *
+     * @return array
+     */
+    public function getTopicsIdZones(array $aZones)
+    {
+        if (!$aZones) {
+            return array();
+        }
+
+        $sql = "SELECT
+                  _t.topic_id,
+                  _t.lat,
+                  _t.long
+                FROM " . Config::Get('db.table.topic') . " AS _t
+                WHERE
+                    _t.topic_publish = 1
+                    ";
+
+        $sSubQuery = "AND (";
+        foreach ($aZones as $aZone) {
+            $iX1 = (int)$aZone['x'];
+            $iX2 = (int)$aZone['x'] + 1;
+            $iY1 = (int)$aZone['y'];
+            $iY2 = (int)$aZone['y'] + 1;
+
+            $sSubQuery .= " ( _t.lat >= " . $iX1 . "
+                    AND _t.lat < " . $iX2 . "
+                    AND _t.long >= " . $iY1 . "
+                    AND _t.long < " . $iY2 . ") OR ";
+        }
+
+        $sql .= rtrim($sSubQuery, 'OR ') . ');';
+
+        $aTopicZones = array();
+        if ($aRows = $this->oDb->select($sql)) {
+            foreach ($aRows as $aTopic) {
+                foreach ($aZones as $aZone) {
+                    if ($aZone['x'] == floor($aTopic['lat']) && $aZone['y'] == floor($aTopic['long'])) {
+                        $aTopicZones[$aZone['x'] . '_' . $aZone['y']][] = $aTopic['topic_id'];
+                    }
+                }
+            }
+        }
+
+        return $aTopicZones;
     }
 
     public function getTopicsByBounds($iTopLeftX, $iTopLeftY, $iBotRightX, $iBotRightY)
