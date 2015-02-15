@@ -52,7 +52,7 @@ class PluginGeopost_ModuleTopic extends PluginTreeblogs_Inherit_ModuleTopic
             $aTopicZones = $this->oMapperTopic->getTopicsIdZones($aRectNeedToQuery);
             foreach ($aTopicZones as $sKey => $aTopicsZone) {
                 $aTopics = array_merge($aTopics, $aTopicsZone);
-                $this->Cache_Set($aTopicsZone, "topic_coordinate_rect_{$sKey}", array(), 60 * 60 * 24 * 1);
+                $this->Cache_Set($aTopicsZone, "topic_coordinate_rect_{$sKey}", array('topic_update','topic_new'), 60 * 60 * 24 * 1);
             }
         }
 

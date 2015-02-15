@@ -77,7 +77,7 @@ $(document).ready(function () {
     }
 
     var marksLayer = L.layerGroup();
-    var map = L.map('map', { layers: [marksLayer], zoom: 10}).setView([0, 0], 7);
+    var map = L.map('map', { layers: [marksLayer], zoom: 10, minZoom: 7 }).setView([0, 0], 7);
 
     L.tileLayer(tileProvider, {
         attribution: mapCopyright
