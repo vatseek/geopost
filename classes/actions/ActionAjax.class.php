@@ -1,6 +1,6 @@
 <?php
 
-class PluginGeopost_ActionAjax extends PluginTreeblogs_Inherit_ActionAjax
+class PluginGeopost_ActionAjax extends PluginGeopost_Inherit_ActionAjax
 {
 
     protected function RegisterEvent()

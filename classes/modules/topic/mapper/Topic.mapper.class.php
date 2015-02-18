@@ -1,6 +1,6 @@
 <?php
 
-class PluginGeopost_ModuleTopic_MapperTopic extends PluginTreeblogs_Inherit_ModuleTopic_MapperTopic
+class PluginGeopost_ModuleTopic_MapperTopic extends PluginGeopost_Inherit_ModuleTopic_MapperTopic
 {
     public function UpdateGeoData($oTopic)
     {

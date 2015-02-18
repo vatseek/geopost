@@ -1,6 +1,6 @@
 <?php
 
-class PluginGeopost_ModuleTopic_EntityTopic extends PluginTreeblogs_Inherit_ModuleTopic_EntityTopic
+class PluginGeopost_ModuleTopic_EntityTopic extends PluginGeopost_Inherit_ModuleTopic_EntityTopic
 {
 
 }
