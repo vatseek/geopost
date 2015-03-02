@@ -1,3 +1,7 @@
+function laterFromData(data) {
+    return L.tileLayer(data.link, data.attributes);
+}
+
 $(document).ready(function () {
     var mapContainer = $('#map_edit');
     if (!mapContainer.length) {
@@ -15,16 +19,32 @@ $(document).ready(function () {
         long = 0;
     }
 
-    var marksLayer = L.layerGroup();
-    var map = L.map('map_edit', { layers: [marksLayer]}).setView([lat, long], 7);
+    var defaultLayer = false;
+    var baseLayers = { };
+    for (var item in tileLayerProviders) {
+        var layer = laterFromData(tileLayerProviders[item]);
+        baseLayers[tileLayerProviders[item].name] = layer;
+        if (!defaultLayer) {
+            defaultLayer = layer;
+        }
 
-    L.tileLayer(tileProvider, {
-        attribution: mapCopyright
-    }).addTo(map);
+        if ($.cookie('map-layer-selected') == tileLayerProviders[item].name) {
+            defaultLayer = layer;
+        }
+    }
+
+    var marksLayer = L.layerGroup();
+    var map = L.map('map_edit', { layers: [defaultLayer, marksLayer]}).setView([lat, long], 7);
+
+    L.control.layers(baseLayers).addTo(map);
 
     if (defaultPos) {
         map.locate({setView: true, watch: false});
     }
+
+    map.on('baselayerchange', function(e) {
+        $.cookie('map-layer-selected', e.name);
+    });
 
     var marker = false;
     if (!defaultPos) {
@@ -76,12 +96,24 @@ $(document).ready(function () {
         return false;
     }
 
-    var marksLayer = L.layerGroup();
-    var map = L.map('map', { layers: [marksLayer], zoom: 10, minZoom: 7 }).setView([0, 0], 7);
+    var defaultLayer = false;
+    var baseLayers = { };
+    for (var item in tileLayerProviders) {
+        var layer = laterFromData(tileLayerProviders[item]);
+        baseLayers[tileLayerProviders[item].name] = layer;
+        if (!defaultLayer) {
+            defaultLayer = layer;
+        }
 
-    L.tileLayer(tileProvider, {
-        attribution: mapCopyright
-    }).addTo(map);
+        if ($.cookie('map-layer-selected') == tileLayerProviders[item].name) {
+            defaultLayer = layer;
+        }
+    }
+
+    var marksLayer = L.layerGroup();
+    var map = L.map('map', { layers: [defaultLayer, marksLayer], zoom: 10, minZoom: 7 }).setView([0, 0], 7);
+
+    L.control.layers(baseLayers).addTo(map);
     map.locate({setView: true, watch: false});
 
     map.on('dragend', function(e) {
@@ -97,6 +129,10 @@ $(document).ready(function () {
     var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
     map.addLayer(markers);
 
+    map.on('baselayerchange', function(e) {
+        $.cookie('map-layer-selected', e.name);
+    });
+
     function getMarks(x1,y1,x2,y2) {
         $.ajax({
             url: aRouter.ajax +"map",
@@ -104,7 +140,6 @@ $(document).ready(function () {
             data: {x1: x1, y1: y1, x2: x2, y2: y2, security_ls_key: LIVESTREET_SECURITY_KEY}
         }).success(function(result) {
             if (result.data) {
-                //marksLayer.res
                 for (var i = 0; i < result.data.length; i++) {
                     setMarker(result.data[i]);
                 }
