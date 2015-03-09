@@ -46,6 +46,36 @@ $(document).ready(function () {
         $.cookie('map-layer-selected', e.name);
     });
 
+    var setPointer = false;
+    var MyControl = L.Control.extend({
+        options: {
+            position: 'topright'
+        },
+        onAdd: function (map) {
+            var controlDiv = L.DomUtil.create('div', 'leaflet-control-command');
+            L.DomEvent
+                .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+                .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+                .addListener(controlDiv, 'click', function () {
+                    $('.leaflet-control-command-setpointer', $(this)).toggleClass('active');
+                    setPointer = !setPointer;
+                });
+
+            var controlUI = L.DomUtil.create('div', 'leaflet-control-command-setpointer', controlDiv);
+            controlUI.title = 'Map Commands';
+            return controlDiv;
+        }
+    });
+
+    map.addControl(new MyControl());
+    map.on('click', function(e) {
+        if (setPointer) {
+            marker.setLatLng(e.latlng);
+            var location = marker.getLatLng();
+            setViewData([location.lat, location.lng]);
+        }
+    });
+
     var marker = false;
     if (!defaultPos) {
         map.setView([lat, long]);

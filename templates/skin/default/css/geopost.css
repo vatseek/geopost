@@ -9,3 +9,41 @@
     width: 100%;
     overflow: hidden;
 }
+
+#mapDiv
+{
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+#map_edit {
+    cursor: crosshair;
+}
+
+.leaflet-control-command-setpointer
+{
+    background-image: url('../img/geolocation.png');
+    width: 30px;
+    height: 30px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: block;
+    padding: 3px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
+    cursor: auto;
+    text-align: center;
+    background-color: #FFF;
+}
+
+.leaflet-control-command-setpointer:hover
+{
+    background-color: #F4F4F4;
+}
+
+.leaflet-control-command-setpointer.active {
+    background-color: #FFB8B8;
+}
