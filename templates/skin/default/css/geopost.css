@@ -21,7 +21,7 @@
     cursor: crosshair;
 }
 
-.leaflet-control-command-setpointer
+.leaflet-control-command-setpointer, .leaflet-control-command-search
 {
     background-image: url('../img/geolocation.png');
     width: 30px;
@@ -37,6 +37,52 @@
     cursor: auto;
     text-align: center;
     background-color: #FFF;
+}
+
+
+
+.leaflet-control-input-search {
+    background: url('../img/search.png' ) 7px 8px no-repeat;
+    background-color: #fff;
+    border: 1px solid #c4c4c4;
+    height: 25px;
+    width: 275px;
+    font-size: 13px;
+    padding: 4px 4px 4px 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 0px 0px 8px #d9d9d9;
+    -moz-box-shadow: 0px 0px 8px #d9d9d9;
+    -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+    padding-left: 30px;
+}
+
+.leaflet-control-input-search-dropdown {
+    width: 310px;
+    /*height: 200px;*/
+    background-color: #fff;
+}
+
+.leaflet-control-input-search-dropdown > ul {
+    color: #666;
+}
+
+.leaflet-control-input-search-dropdown > ul > li {
+    padding: 5px 6px;
+    cursor: pointer;
+}
+
+.leaflet-control-input-search-dropdown > ul > li:hover {
+    background-color: rgba(15, 153, 254, 0.50);
+}
+
+.leaflet-control-input-search:focus {
+    outline: none;
+    border: 1px solid #7bc1f7;
+    box-shadow: 0px 0px 8px #7bc1f7;
+    -moz-box-shadow: 0px 0px 8px #7bc1f7;
+    -webkit-box-shadow: 0px 0px 8px #7bc1f7;
 }
 
 .leaflet-control-command-setpointer:hover

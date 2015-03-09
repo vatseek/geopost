@@ -62,7 +62,7 @@ $(document).ready(function () {
                 });
 
             var controlUI = L.DomUtil.create('div', 'leaflet-control-command-setpointer', controlDiv);
-            controlUI.title = 'Map Commands';
+            controlUI.title = 'Set point';
             return controlDiv;
         }
     });
@@ -143,6 +143,40 @@ $(document).ready(function () {
     var marksLayer = L.layerGroup();
     var map = L.map('map', { layers: [defaultLayer, marksLayer], zoom: 10, minZoom: 7 }).setView([0, 0], 7);
 
+    var timeDelay = false;
+    var MyControl = L.Control.extend({
+        options: {
+            position: 'topright'
+        },
+        onAdd: function (map) {
+            var controlDiv = L.DomUtil.create('div', 'leaflet-control-command');
+            L.DomEvent
+                .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+                .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+                .addListener(controlDiv, 'click', function (e) {
+                    var element = $(e.target);
+                    if (element.hasClass('geopost-search-item')) {
+                        map.setView([element.data('long'), element.data('lat')], map.getZoom());
+                        $('.leaflet-control-input-search-dropdown').html('');
+                    }
+                })
+                .addListener(controlDiv, 'keyup', function () {
+                    if (!timeDelay) {
+                        timeDelay = setTimeout(sendGeoCodingRequest, 1000);
+                    } else {
+                        clearTimeout(timeDelay);
+                        timeDelay = setTimeout(sendGeoCodingRequest, 1000);
+                    }
+                });
+
+            var controlInput = L.DomUtil.create('input', 'leaflet-control-input-search', controlDiv);
+            var controlDropdown = L.DomUtil.create('div', 'leaflet-control-input-search-dropdown', controlDiv);
+            return controlDiv;
+        }
+    });
+
+    map.addControl(new MyControl());
+
     L.control.layers(baseLayers).addTo(map);
     map.locate({setView: true, watch: false});
 
@@ -196,6 +230,41 @@ $(document).ready(function () {
         );
 
         markers.addLayer(marker);
+    }
+
+    function sendGeoCodingRequest() {
+        var url = 'http://geocode-maps.yandex.ru/1.x/?format=json&geocode=';
+        var element = $('.leaflet-control-input-search')
+        var query = element.val();
+
+        $.ajax({
+            url: url + encodeURIComponent(query),
+            context: document.body
+        }).success(function(result) {
+            try {
+                if (result.response.GeoObjectCollection.featureMember.length) {
+                    var items = result.response.GeoObjectCollection.featureMember;
+                    var html = '<ul>';
+                    var counter = 0;
+                    for (var item in items) {
+                        var latLong = items[item].GeoObject.Point.pos.split(' ');
+                        html += '<li class="geopost-search-item" data-lat="' + latLong[0] + '" data-long="' + latLong[1] + '">' +
+                                    items[item].GeoObject.description + ' ' + items[item].GeoObject.name +
+                                '</li>';
+
+                        if (counter > 10) {
+                            break;
+                        }
+                        counter++;
+                    }
+                    html += '</ul>';
+
+                    $('.leaflet-control-input-search-dropdown').html(html);
+                }
+            } catch (e) {
+                console.log('Error parsing response date');
+            }
+        });
     }
 });
 
