@@ -237,6 +237,10 @@ $(document).ready(function () {
         var element = $('.leaflet-control-input-search')
         var query = element.val();
 
+        if (query.length < 3) {
+            return;
+        }
+
         $.ajax({
             url: url + encodeURIComponent(query),
             context: document.body
