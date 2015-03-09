@@ -21,7 +21,7 @@
     cursor: crosshair;
 }
 
-.leaflet-control-command-setpointer, .leaflet-control-command-search
+.leaflet-control-command-setpointer, .leaflet-control-command-search, .leaflet-control-input-fullscreen
 {
     background-image: url('../img/geolocation.png');
     width: 30px;
@@ -39,7 +39,9 @@
     background-color: #FFF;
 }
 
-
+.leaflet-control-input-fullscreen {
+    background-image: url('../img/full-screen-icon.png');
+}
 
 .leaflet-control-input-search {
     background: url('../img/search.png' ) 7px 8px no-repeat;

@@ -144,7 +144,7 @@ $(document).ready(function () {
     var map = L.map('map', { layers: [defaultLayer, marksLayer], zoom: 10, minZoom: 7 }).setView([0, 0], 7);
 
     var timeDelay = false;
-    var MyControl = L.Control.extend({
+    var searchControl = L.Control.extend({
         options: {
             position: 'topright'
         },
@@ -175,7 +175,8 @@ $(document).ready(function () {
         }
     });
 
-    map.addControl(new MyControl());
+    map.addControl(new searchControl());
+    L.control.fullscreen().addTo(map);
 
     L.control.layers(baseLayers).addTo(map);
     map.locate({setView: true, watch: false});
